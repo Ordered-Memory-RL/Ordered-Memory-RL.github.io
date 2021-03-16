@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Learning Task Decomposition with Ordered Memory Policy Network | Yuchen Lu, Yikang Shen, Siyuan Zhou, Aaron Courville, Joshua B. Tenenbaum, Chuang Gan</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Learning Task Decomposition with Ordered Memory Policy Network" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Yuchen Lu, Yikang Shen, Siyuan Zhou, Aaron Courville, Joshua B. Tenenbaum, Chuang Gan" />
+<meta property="og:description" content="Yuchen Lu, Yikang Shen, Siyuan Zhou, Aaron Courville, Joshua B. Tenenbaum, Chuang Gan" />
+<meta property="og:site_name" content="Learning Task Decomposition with Ordered Memory Policy Network" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Learning Task Decomposition with Ordered Memory Policy Network" />
+<script type="application/ld+json">
+{"@type":"WebSite","headline":"Learning Task Decomposition with Ordered Memory Policy Network","description":"Yuchen Lu, Yikang Shen, Siyuan Zhou, Aaron Courville, Joshua B. Tenenbaum, Chuang Gan","url":"/","name":"Learning Task Decomposition with Ordered Memory Policy Network","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" as="style" type="text/css" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Learning Task Decomposition with Ordered Memory Policy Network</h1>
+      <h2 class="project-tagline">Yuchen Lu, Yikang Shen, Siyuan Zhou, Aaron Courville, Joshua B. Tenenbaum, Chuang Gan</h2>
+      <a href="https://openreview.net/pdf?id=vcopnwZ7bC" class="btn">Paper</a>
+      <a href="https://github.com/Ordered-Memory-RL/" class="btn">Code</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="motivation">Motivation</h1>
+
+<p>We aim to design a general policy network architecture so that it has a inductive bias to converge into the following subtask hierarchy as below. 
+The agent wants to complete the task of building a bridge. 
+This task can be decomposed into a tree-like, multi-level structure, where the root task is divided into <code class="language-plaintext highlighter-rouge">GetMaterial</code> and <code class="language-plaintext highlighter-rouge">BuildBridge</code>. 
+<code class="language-plaintext highlighter-rouge">GetMaterial</code> can be further divided into <code class="language-plaintext highlighter-rouge">GetGrass</code> and <code class="language-plaintext highlighter-rouge">GetWood</code>.</p>
+
+<p><img src="assets/example.jpg" alt="subtasks" /></p>
+
+<p>This is a sketch on how this subtask structure should be represented inside the agent’s memory during each time step. 
+The memory would be divided into different levels, corresponding to the subtask structure. 
+The <span style="color:blue"><em>vertical expansion</em> </span> corresponds to planning or calling the next level subtasks.
+The <span style="color:red"><em>horizontal expansion</em> </span> can be thought of as an internal update for eachsubtask.
+The black arrows are copy operations.
+<img src="assets/subtask_hier.png" alt="subtasks" /></p>
+
+<h1 id="method-ordered-memory-policy-network-ompn">Method: <strong>O</strong>rdered <strong>M</strong>emory <strong>P</strong>olicy <strong>N</strong>etwork (<strong>OMPN</strong>)</h1>
+
+<p>We achieve the goal described above with a fully end-to-end network. 
+We use a multi-level memory slots where each slot represent one subtask.
+The central concept in our model is <strong>expansion position</strong> from which the vertical expansion is performed.</p>
+
+<ol>
+  <li>
+    <p><strong>if the model thinks the current lower-level subtask is ended, then the expansion position should be high (c) so that the higher-level subtask is vertically expanded into a new lower-level subtask.</strong></p>
+  </li>
+  <li>
+    <p><strong>if the model thinks the current lower-level subtask is not ended, then the expansion position should remain low (a) so that the higher-level subtask is copied to achieve long-term dependency.</strong>.</p>
+  </li>
+</ol>
+
+<p>The details of our design can be found in the paper.</p>
+
+<p><img src="assets/method.png" alt="subtasks" /></p>
+
+<h1 id="task-decomposition-with-behavior-cloning">Task Decomposition with Behavior Cloning</h1>
+
+<p>Our main result is that by simply using behavior cloning on the demonstration dataset, the ground truth subtask structure would <em>naturally emerge</em> inside our model, which can be found by monitoring the expansion positions. In the following visualization, we plot the trajectories as well as the change of expansion positon over time.</p>
+
+<h2 id="demo-craft">Demo (Craft)</h2>
+<p><img src="assets/craft.gif" alt="subtasks" /></p>
+
+<h2 id="demo-dial">Demo (Dial)</h2>
+<p><img src="assets/dial.gif" alt="subtasks" /></p>
+
+<h2 id="demo-kitchen">Demo (Kitchen)</h2>
+<p><img src="assets/kitchen.gif" alt="subtasks" /></p>
+
+
+      <footer class="site-footer">
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>
